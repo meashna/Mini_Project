@@ -1,0 +1,23 @@
+.sidenav_items {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 80vh;
+}
+
+.sidenav_icons {
+    color: #A09F9F;
+    font-size: 3rem;
+    cursor: pointer;
+    padding: 5px;
+    position: relative;
+}
+
+.active_icon {
+    color: #384A78;
+    font-size: 3rem;
+    cursor: pointer;
+    padding: 5px;
+    position: relative;
+}

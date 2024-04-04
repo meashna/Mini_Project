@@ -1,0 +1,52 @@
+.topnav_cont {
+    display: flex;
+    width: 90vw;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+.search_box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 14rem;
+    padding: 0.5rem;
+    border-radius: 5px;
+    background: #FFF;
+    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+.search_icon {
+    cursor: pointer;
+}
+
+.search_input {
+    border: none;
+    outline: none;
+}
+
+.pro_details {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: max-content;
+}
+
+.pro_name {
+    padding: 0 0.5rem;
+    color: #000;
+    text-align: center;
+    font-family: Lato;
+    font-size: 1.5rem;
+    font-weight: 600;
+
+}
+
+.pro_pic {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-size: cover;
+}

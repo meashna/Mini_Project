@@ -1,0 +1,199 @@
+.cart_main {
+
+    display: flex;
+    height: 80vh;
+}
+
+.leftmain_cart {
+
+    flex-grow: 1;
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+}
+
+.rightmain_cart {
+    min-width: 20%;
+    margin: 1rem;
+    padding: 1rem;
+    height: 50%;
+    border-radius: 0.625rem;
+    background: #FFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+.product {
+    margin: 1rem;
+    flex: 1;
+    display: flex;
+    border-radius: 0.625rem;
+    background: #FFF;
+    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+.col1 {
+
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.col2 {
+
+    flex: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+}
+
+.product_img {
+    width: 5rem;
+    height: 7rem;
+}
+
+.head_name {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.product_name {
+    margin-bottom: 0.3rem;
+    color: #222;
+    font-family: Lato;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.total {
+    margin-right: 1rem;
+    color: #000;
+    font-family: Lato;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+
+.product_subhead {
+
+    margin-bottom: 0.3rem;
+    color: #222;
+    font-family: Lato;
+    font-size: 1rem;
+
+    font-weight: 400;
+}
+
+.prize {
+
+    margin-bottom: 0.3rem;
+    color: #A09F9F;
+    font-family: Lato;
+    font-size: 0.8rem;
+    font-weight: 400;
+
+}
+
+.more {
+    display: flex;
+    width: 10rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.product_icon {
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+.add_minus {
+    display: flex;
+    width: 5rem;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 5px;
+    background: #FFF;
+    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.12);
+
+}
+
+
+.minus_btn {
+    outline: none;
+    border: none;
+    background: #FFF;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.add_btn {
+    outline: none;
+    border: none;
+    background: #FFF;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.payment_head {
+    color: #222;
+    text-align: left;
+    font-family: Lato;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.price_row {
+    display: flex;
+
+}
+
+.price {
+    color: #222;
+    font-family: Lato;
+    font-size: 1rem;
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+}
+
+.price_label {
+    margin-right: 10px;
+    text-align: left;
+    color: #222;
+    font-family: Lato;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.deliverymode {
+    color: #222;
+    font-family: Lato;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.btn_rent {
+    border-radius: 5px;
+    background: #384A78;
+    padding: 0.3rem;
+    outline: none;
+    color: white;
+    width: 4rem;
+    border: none;
+    cursor: pointer;
+}
+
+.rent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
