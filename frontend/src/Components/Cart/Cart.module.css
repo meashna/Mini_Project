@@ -197,3 +197,12 @@
     align-items: center;
     justify-content: center;
 }
+
+.days {
+    margin-right: 10px;
+    text-align: left;
+    color: #222;
+    font-family: Lato;
+    font-size: 1rem;
+    font-weight: 400;
+}

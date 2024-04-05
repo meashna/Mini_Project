@@ -10,8 +10,8 @@
 
 
 .loader_container {
-    height: 3rem;
-    width: 3rem;
+    height: 2rem;
+    width: 2rem;
     margin: 1rem;
 }
 
@@ -19,6 +19,8 @@
     font-weight: 700;
     font-size: 3rem;
     text-align: center;
+    margin: 0;
+    padding: 0;
 }
 
 .form {
@@ -30,11 +32,11 @@
     padding: 2rem;
     border-radius: 5px;
     background-color: #FBFBFB;
-    height: 450px;
+    height: 500px;
 }
 
 .form_control {
-    margin: 1rem;
+    margin: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: space-between;

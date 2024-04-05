@@ -65,3 +65,12 @@
     outline: none;
     cursor: pointer;
 }
+
+.main_side {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 77vh;
+    margin: 10px 0;
+}

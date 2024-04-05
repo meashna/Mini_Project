@@ -4,6 +4,8 @@ import { CiSearch } from "react-icons/ci";
 import sarah from "../../assets/sarah.jpg";
 
 const TopNav = () => {
+  const username = localStorage.getItem("username") || "Guest";
+
   return (
     <div>
       <div className={styles.topnav_cont}>
@@ -16,7 +18,7 @@ const TopNav = () => {
           />
         </div>
         <div className={styles.pro_details}>
-          <div className={styles.pro_name}>Hello Sarah!</div>
+          <div className={styles.pro_name}>{username}</div>
           <img src={sarah} className={styles.pro_pic} />
         </div>
       </div>
