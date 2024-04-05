@@ -6,7 +6,9 @@ const Orders = () => {
     <div>
       <div className={styles.main_cont}>
         <div className={styles.col_1}>
-          <div className={styles.top_row}>Top</div>
+          <div className={styles.top_row}>
+            <h1>Hi Ashna</h1>
+          </div>
           <div className={styles.btm_row}>Btm</div>
         </div>
 
