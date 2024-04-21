@@ -7,6 +7,7 @@ import RightNav from "../RightNav/RightNav";
 const Recomm = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [products, setProducts] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     console.log("Updated products:", products);
@@ -61,6 +62,7 @@ const Recomm = () => {
                     key={product._id}
                     className={styles.book}
                     style={{ cursor: "pointer" }}
+                    onClick={() => setSelectedItem(product)}
                   >
                     <img
                       src={`http://localhost:3000/uploads/${product.productImage}`}
