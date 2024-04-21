@@ -8,29 +8,41 @@ const app = express();
 require("./conn/conn");
 
 const authRoutes = require("./routes/auth");
+const productRoutes = require("./routes/product");
 
 app.use(express.json());
 
 app.use(
   cors({
-    origin: "*", // Allows requests from all origins
-    credentials: true, // Allows cookies to be sent with requests
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allowed HTTP headers
-    preflightContinue: true, // Moves the request to the next middleware if the preflight request is successful
+    origin: "*",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    preflightContinue: true,
   })
 );
 
-// Setup CORS headers for all responses
+const corsOptions = {
+  origin: true, // Reflect the request origin, as defined by `req.header('Origin')`
+  credentials: true, // Allow cookies to be sent
+};
+
+app.use(cors(corsOptions));
+
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*"); // Allows all origins
+  res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   next();
 });
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.use("/api/v1", authRoutes);
+app.use("/api/v1", productRoutes);
+// app.use("/api/v2", authRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

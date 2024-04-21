@@ -1,0 +1,38 @@
+.form_seller {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: aquamarine;
+}
+
+.form_items {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.form_field {
+    margin: 0.5rem;
+}
+
+/* Added product viewing here */
+.mainpro_div {
+    background-color: blue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.product_div {
+    background-color: beige;
+    margin: 0.5rem;
+}
+
+.pro_img {
+    margin: 0.5rem;
+    width: 10rem;
+    height: 10rem;
+}

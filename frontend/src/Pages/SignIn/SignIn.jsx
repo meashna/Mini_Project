@@ -62,23 +62,29 @@ const SignIn = () => {
         "http://localhost:3000/api/v1/signin",
         Inputs
       );
-
-      setProgress(100);
-      setTimeout(() => {
-        navigate("/home");
-      }, 2000);
-
+      console.log("This is response", response.data._id);
+      console.log(response.data._id);
       sessionStorage.setItem("id", response.data._id);
 
+      console.log("Role is" + response.data.role);
+      if (response.data.role === "buyer") {
+        setProgress(100);
+        setTimeout(() => {
+          navigate("/home");
+        }, 2000);
+      } else if (response.data.role === "seller") {
+        setProgress(100);
+        setTimeout(() => {
+          navigate("/seller");
+        }, 2000);
+      }
+      sessionStorage.setItem("id", response.data._id);
       const username = response.data.username;
       const usermail = response.data.email;
-
       localStorage.setItem("username", username);
       localStorage.setItem("usermail", usermail);
-
       console.log(username);
       console.log(usermail);
-
       Swal({
         icon: "success",
         title: "Logged In Successfully.",

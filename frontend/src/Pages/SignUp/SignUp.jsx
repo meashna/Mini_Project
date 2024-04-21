@@ -1,39 +1,125 @@
 import React, { useState, useEffect } from "react";
-import styles from "./SignUp.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IoPerson, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-import { RiLock2Fill } from "react-icons/ri";
+// import { RiLock2Fill } from "react-icons/ri";
 import { MdOutlineAlternateEmail } from "react-icons/md";
-import Swal from "sweetalert";
-import { CircularProgressbar } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
 import { FaPhoneAlt } from "react-icons/fa";
+import { CircularProgressbar } from "react-circular-progressbar";
+import Swal from "sweetalert";
+import styles from "./SignUp.module.css";
+import "react-circular-progressbar/dist/styles.css";
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [phonenumber, setPhonenumber] = useState("");
-  const [retypepassword, setRetypePassword] = useState("");
   const [Inputs, setInputs] = useState({
     username: "",
     email: "",
+    phonenumber: "",
     password: "",
+    role: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessages, setErrorMessages] = useState({
-    email: "",
-    password: "",
-    retypePassword: "",
-  });
+
+  // Navigate hook
+  const navigate = useNavigate();
+
+  // const handlePhoneChange = (e) => {
+  //   const value = e.target.value;
+  //   if (!value.match(/[^0-9 ]/) && value.replace(/\D/g, "").length <= 10) {
+  //     setPhonenumber(value);
+  //   }
+  // };
 
   const handlePhoneChange = (e) => {
     const value = e.target.value;
     if (!value.match(/[^0-9 ]/) && value.replace(/\D/g, "").length <= 10) {
       setPhonenumber(value);
+      setInputs((prev) => ({ ...prev, phonenumber: value }));
     }
   };
 
+  const change = (e) => {
+    const { name, value } = e.target;
+    setInputs((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("This is inputs", Inputs);
+    // Validation
+    if (
+      !Inputs.email.trim() ||
+      !Inputs.password.trim() ||
+      !Inputs.username.trim() ||
+      !Inputs.phonenumber.trim() ||
+      !Inputs.role.trim()
+    ) {
+      Swal({
+        icon: "warning",
+        title: "Please fill out all fields.",
+        button: "Try Again",
+      });
+      return;
+    }
+
+    setLoading(true);
+    setProgress(0);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/signup",
+        Inputs
+      );
+      console.log("This is response", response.data._id);
+      console.log(response.data._id);
+      sessionStorage.setItem("id", response.data._id);
+      if (response.data.message === "User added") {
+        sessionStorage.setItem("id", response.data._id);
+        localStorage.setItem("username", Inputs.username);
+        localStorage.setItem("usermail", Inputs.email);
+        // setProgress(100);
+        // setTimeout(() => navigate("/home"), 500);
+        if (Inputs.role === "buyer") {
+          setProgress(100);
+          setTimeout(() => {
+            navigate("/home");
+          }, 2000);
+        } else if (Inputs.role === "seller") {
+          setProgress(100);
+          setTimeout(() => {
+            navigate("/seller");
+          }, 2000);
+        }
+        Swal({
+          icon: "success",
+          title: "Registered Successfully.",
+          button: "OK",
+        });
+      }
+    } catch (error) {
+      setLoading(false);
+      if (
+        error.response &&
+        error.response.data.message === "User already exists"
+      ) {
+        Swal({
+          icon: "error",
+          title: "User already exists",
+          button: "Try Again",
+        });
+        navigate("/signin");
+      }
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  // Effects
   useEffect(() => {
     let timer;
     if (loading) {
@@ -43,94 +129,12 @@ const SignUp = () => {
             clearInterval(timer);
             return 100;
           }
-          const diff = Math.random() * 10;
-          return Math.min(prevProgress + diff, 100);
+          return Math.min(prevProgress + Math.random() * 10, 100);
         });
       }, 500);
     }
     return () => clearInterval(timer);
   }, [loading]);
-
-  useEffect(() => {
-    if (
-      Inputs.password &&
-      retypepassword &&
-      Inputs.password !== retypepassword
-    ) {
-      setErrorMessages((prev) => ({
-        ...prev,
-        retypePassword: "Passwords do not match.",
-      }));
-    } else {
-      setErrorMessages((prev) => ({ ...prev, retypePassword: "" }));
-    }
-  }, [Inputs.password, retypepassword]);
-
-  const navigate = useNavigate();
-
-  const change = (e) => {
-    const { name, value } = e.target;
-    setInputs((prev) => ({ ...prev, [name]: value }));
-    setErrorMessages((prev) => ({ ...prev, [name]: "" }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!Inputs.email.trim() || !Inputs.password.trim()) {
-      Swal({
-        icon: "warning",
-        title: "Please fill out all fields.",
-        button: "Try Again",
-      });
-      return;
-    }
-    setLoading(true);
-    setProgress(0);
-    await axios
-      .post("http://localhost:3000/api/v1/signup", Inputs)
-      .then((response) => {
-        if (response.data.message === "User added") {
-          console.log(response.data._id);
-          sessionStorage.setItem("id", response.data._id);
-          localStorage.setItem("username", Inputs.username);
-          console.log(Inputs.username);
-          localStorage.setItem("usermail", Inputs.email);
-          console.log(Inputs.email);
-          setProgress(100);
-          setTimeout(() => {
-            navigate("/home");
-          }, 500);
-          Swal({
-            icon: "success",
-            title: "Registered Successfully.",
-            button: "OK",
-          });
-        }
-        setInputs({
-          username: "",
-          email: "",
-          password: "",
-        });
-      })
-      .catch((error) => {
-        setLoading(false);
-        if (
-          error.response &&
-          error.response.data.message === "User already exists"
-        ) {
-          Swal({
-            icon: "error",
-            title: "User already exists",
-            button: "Try Again",
-          });
-          navigate("/signin");
-        }
-      });
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
 
   return (
     <div>
@@ -164,7 +168,7 @@ const SignUp = () => {
               onChange={change}
               value={Inputs.username}
               placeholder="Enter your name"
-              pattern="[A-Za-z ]+"
+              pattern="[A-Za-z]+"
               required
             />
             <div className={styles.icon}>
@@ -193,7 +197,7 @@ const SignUp = () => {
               pattern="\d{10}"
               title="Phone number must contain 10 digits."
               onChange={handlePhoneChange}
-              value={phonenumber}
+              value={Inputs.phonenumber}
             />
             <div className={styles.icon}>
               <FaPhoneAlt />
@@ -213,21 +217,18 @@ const SignUp = () => {
               onClick={togglePasswordVisibility}
               className={styles.toggle_password}
             >
-              {showPassword ? <IoEyeOutline /> : <IoEyeOffOutline />}
+              {showPassword ? (
+                <IoEyeOutline className={styles.viewicon} />
+              ) : (
+                <IoEyeOffOutline className={styles.viewicon} />
+              )}
             </button>
           </div>
-          <div className={styles.form_control}>
-            <input
-              placeholder="Confirm Password"
-              type={showPassword ? "text" : "password"}
-              onChange={(e) => setRetypePassword(e.target.value)}
-              value={retypepassword}
-              required
-            />
-            <div className={styles.icon}>
-              <RiLock2Fill />
-            </div>
-          </div>
+          <select name="role" value={Inputs.role} onChange={change} required>
+            <option value="">Select Role</option>
+            <option value="seller">I want to offer products for rent. </option>
+            <option value="buyer">I am looking to purchase products.</option>
+          </select>
           <button className={styles.login_btn} type="submit">
             Register
           </button>

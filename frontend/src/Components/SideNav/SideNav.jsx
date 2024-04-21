@@ -2,9 +2,11 @@ import React from "react";
 import styles from "./SideNav.module.css";
 import { AiFillHome } from "react-icons/ai";
 import { FaShoppingCart } from "react-icons/fa";
-import { IoIosSend } from "react-icons/io";
+// import { IoIosSend } from "react-icons/io";
 import { IoLogOutSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+// import { FaPlusCircle } from "react-icons/fa";
+import { AiFillPlusCircle } from "react-icons/ai";
 
 const SideNav = ({ changeView, currentView }) => {
   const navigate = useNavigate();
@@ -28,7 +30,14 @@ const SideNav = ({ changeView, currentView }) => {
           />
         </div>
         <div onClick={changeView("orders")}>
-          <IoIosSend
+          {/* <IoIosSend
+            className={
+              currentView === "orders"
+                ? styles.active_icon
+                : styles.sidenav_icons
+            }
+          /> */}
+          <AiFillPlusCircle
             className={
               currentView === "orders"
                 ? styles.active_icon

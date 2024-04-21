@@ -1,16 +1,35 @@
 .cart_main {
-
     display: flex;
     height: 80vh;
 }
 
 .leftmain_cart {
-
     flex-grow: 1;
     flex-direction: column;
     display: flex;
     justify-content: space-between;
+    overflow-y: scroll;
+    scrollbar-width: thin;
 }
+
+
+
+.leftmain_cart::-webkit-scrollbar {
+    width: 5px;
+    margin: 20px;
+
+}
+
+.leftmain_cart::-webkit-scrollbar-track {
+    background: #f1f1f1;
+
+}
+
+.leftmain_cart::-webkit-scrollbar-thumb {
+    background: #e2e2e2;
+    border-radius: 5px;
+}
+
 
 .rightmain_cart {
     min-width: 20%;

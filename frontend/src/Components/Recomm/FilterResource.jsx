@@ -107,9 +107,6 @@ const FilterResource = () => {
             )
         )}
       </div>
-      {/* <div className={styles.rightcol}>
-        <RightNav selectedItem={selectedItem} />
-      </div> */}
     </div>
   );
 };

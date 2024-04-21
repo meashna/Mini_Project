@@ -1,16 +1,22 @@
 const router = require("express").Router();
 const User = require("../models/user.js");
-const bcrypt = require("bcryptjs");
+// const bcrypt = require("bcryptjs");
 
 router.post("/signup", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, phonenumber, password, role } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
-    const hashpassword = bcrypt.hashSync(password);
-    const user = new User({ username, email, password: hashpassword });
+    // const hashpassword = bcrypt.hashSync(password);
+    const user = new User({
+      username,
+      phonenumber,
+      email,
+      password,
+      role,
+    });
     await user
       .save()
       // .then(() => res.status(200).json({ message: "User added" }));
@@ -30,11 +36,17 @@ router.post("/signin", async (req, res) => {
       return res.status(400).json({ message: "User not found." });
     }
 
-    const isPasswordCorrect = bcrypt.compareSync(
-      req.body.password,
-      user.password
-    );
-    if (!isPasswordCorrect) {
+    // const isPasswordCorrect = bcrypt.compareSync(
+    //   req.body.password,
+    //   user.password
+    // );
+    // if (!isPasswordCorrect) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Incorrect password. Please try again." });
+    // }
+
+    if (req.body.password !== user.password) {
       return res
         .status(400)
         .json({ message: "Incorrect password. Please try again." });

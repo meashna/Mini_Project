@@ -11,7 +11,6 @@ const Orders = () => {
           </div>
           <div className={styles.btm_row}>Btm</div>
         </div>
-
         <div className={styles.col_2}>2</div>
       </div>
     </div>
