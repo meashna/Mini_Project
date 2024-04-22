@@ -92,4 +92,18 @@ router.get("/getAllProducts", async (req, res) => {
   }
 });
 
+router.post("/buyProducts", async (req, res) => {
+  try {
+    const { productId, userId } = req.body;
+    const product = await Product.findById(productId);
+    const user = await User.findById(userId);
+    user.products.push(product._id);
+    await user.save();
+    res.status(200).json({ message: "Product purchased successfully" });
+  } catch (error) {
+    console.error("Failed to purchase product:", error);
+    res.status(500).json({ message: "Failed to purchase product" });
+  }
+});
+
 module.exports = router;

@@ -3,7 +3,6 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: aquamarine;
 }
 
 .form_items {
@@ -19,7 +18,7 @@
 
 /* Added product viewing here */
 .mainpro_div {
-    background-color: blue;
+    /* background-color: blue; */
     display: flex;
     align-items: center;
     justify-content: center;
