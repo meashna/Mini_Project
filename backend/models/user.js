@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  buyedProducts: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "BuyedProduct" },
+  ],
   role: { type: String, enum: ["buyer", "seller"] },
 });
 

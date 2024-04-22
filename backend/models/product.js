@@ -15,6 +15,9 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  buyedProducts: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "BuyedProduct" },
+  ],
 });
 
 const Product = mongoose.model("Product", productSchema);
