@@ -80,6 +80,7 @@ const SignUp = () => {
         sessionStorage.setItem("id", response.data._id);
         localStorage.setItem("username", Inputs.username);
         localStorage.setItem("usermail", Inputs.email);
+        sessionStorage.setItem("usermail", Inputs.email);
         // setProgress(100);
         // setTimeout(() => navigate("/home"), 500);
         if (Inputs.role === "buyer") {

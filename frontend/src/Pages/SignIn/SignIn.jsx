@@ -85,6 +85,7 @@ const SignIn = () => {
       localStorage.setItem("usermail", usermail);
       console.log(username);
       console.log(usermail);
+      sessionStorage.setItem("usermail", usermail);
       Swal({
         icon: "success",
         title: "Logged In Successfully.",
