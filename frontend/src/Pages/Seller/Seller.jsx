@@ -103,7 +103,7 @@ const Seller = () => {
   return (
     <div>
       <div className={styles.form_seller}>
-        <h1> Hi {username}, Sell Something</h1>
+        <h1> Hi {username}, Sell Something!!</h1>
         <form onSubmit={handleSubmit} className={styles.form_items}>
           <div>
             {" "}
