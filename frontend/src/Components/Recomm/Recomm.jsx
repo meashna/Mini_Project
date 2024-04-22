@@ -1,148 +1,89 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import styles from "./Recomm.module.css";
 import { FaGreaterThan } from "react-icons/fa6";
-import img1 from "../../assets/basic_civil.png";
-import img2 from "../../assets/pro_ethics.jpg";
-import img3 from "../../assets/uni_que.avif";
-import img4 from "../../assets/coat_lab.png";
-import img5 from "../../assets/civil_lab.jpg";
-import img6 from "../../assets/the_eng.webp";
 import RightNav from "../RightNav/RightNav";
-import labImages from "../data.js";
 
 const Recomm = () => {
-  const [images, setImages] = useState([]);
-  const [indices, setIndices] = useState([0, 1, 2, 3]);
+  const maxBooksDisplay = 4;
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [products, setProducts] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedItemList, setSelectedItemList] = useState([]);
 
-  // all
-  const [allImages, setAllImages] = useState([]);
-  const [displayedImages, setDisplayedImages] = useState([]);
-  const [labIndices, setLabIndices] = useState([0, 1, 2, 3, 4]);
+  // For filtered products
+  const maxBooksDisplayFilter = 5;
+  const [currentIndexFilter, setCurrentIndexFilter] = useState(0);
   const [activeCategory, setActiveCategory] = useState("All");
-
-  const fetchImagesFromBackend = () => {
-    return Promise.resolve([
-      {
-        image: img1,
-        name: "Basic Civil Engineering",
-        description: "Basic civil Engineering Text Book for Students",
-        price: 10,
-        category: "Textbook",
-      },
-      {
-        image: img2,
-        name: "Professional Ethics",
-        description: "Professional Ethics Text Book for Students",
-        price: 20,
-        category: "Textbook",
-      },
-      {
-        image: img3,
-        name: "University Questions",
-        description: "University Questions Text Book for Students",
-        price: 30,
-        category: "Textbook",
-      },
-      {
-        image: img4,
-        name: "Lab Coat",
-        description: "Lab Coat for Civil Engineering Students",
-        price: 40,
-        category: "Labmaterials",
-      },
-      {
-        image: img5,
-        name: "Civil Lab",
-        description: "Civil Lab for Students",
-        price: 50,
-        category: "Labmaterials",
-      },
-      {
-        image: img6,
-        name: "Thermal Engineering",
-        description: "Thermal Engineering Text Book for Students",
-        price: 60,
-        category: "Textbook",
-      },
-    ]);
-  };
-
-  useEffect(() => {
-    fetchImagesFromBackend().then((fetchedImages) => {
-      setImages(fetchedImages);
-      setIndices(
-        fetchedImages.length <= 4
-          ? fetchedImages.map((_, index) => index)
-          : [0, 1, 2, 3]
-      );
-    });
-  }, []);
-
-  const handleMoreClick = () => {
-    const newIndices = indices.map((index) => (index + 1) % images.length);
-    setIndices(newIndices);
-  };
-  // const showDetails = (index) => {
-  //   setSelectedItem(images[index]);
-  // };
-  const showDetails = (index) => {
-    const item = images[index];
-    setSelectedItem(item); // Set the last selected item
-    setSelectedItemList((prevList) => [...prevList, item]); // Add to selectedItemList without duplicate check
-  };
-
   const categories = [
     "All",
-    "Notebook",
     "Textbook",
+    "Notebook",
     "Supplymaterials",
     "Labmaterials",
   ];
 
   useEffect(() => {
-    setAllImages(labImages);
-    setDisplayedImages(labImages);
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/getAllProducts"
+        );
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
+    };
+    fetchProducts();
   }, []);
 
-  const handleCategoryClick = (category) => {
-    setActiveCategory(category);
-    if (category === "All") {
-      setDisplayedImages(allImages);
-      setLabIndices(
-        allImages.length <= 5
-          ? allImages.map((_, index) => index)
-          : [0, 1, 2, 3, 4]
-      );
-    } else {
-      const filteredImages = allImages.filter(
-        (image) => image.category === category
-      );
-      setDisplayedImages(filteredImages);
-      setLabIndices(
-        filteredImages.length <= 4
-          ? filteredImages.map((_, index) => index)
-          : [0, 1, 2, 3, 4]
+  const handleMoreClick = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
+  };
+
+  const getDisplayProducts = () => {
+    let displayProducts = [];
+    for (let i = 0; i < maxBooksDisplay; i++) {
+      const index = (currentIndex + i) % products.length;
+      displayProducts.push(products[index]);
+    }
+    return displayProducts;
+  };
+
+  // For filtered products
+  const handleMoreClickFilter = () => {
+    const filteredProducts = getFilteredProducts();
+    if (filteredProducts.length > maxBooksDisplayFilter) {
+      setCurrentIndexFilter(
+        (prevIndex) => (prevIndex + 1) % filteredProducts.length
       );
     }
   };
 
-  const handleAllClick = () => {
-    const newLabIndices = labIndices.map(
-      (index) => (index + 1) % displayedImages.length
-    );
-    setLabIndices(newLabIndices);
+  const getFilteredProducts = () => {
+    if (activeCategory === "All") {
+      return products;
+    } else {
+      return products.filter(
+        (product) => product.productCategory === activeCategory
+      );
+    }
   };
-  // const showDetailsAll = (index) => {
-  //   setSelectedItem(displayedImages[index]);
-  // };
-  const showDetailsAll = (index) => {
-    const item = displayedImages[index];
-    setSelectedItem(item); // Set the last selected item
-    setSelectedItemList((prevList) => [...prevList, item]); // Add to selectedItemList without duplicate check
+
+  const getDisplayProductsFilter = () => {
+    const filteredProducts = getFilteredProducts();
+    let displayProductsFilter = [];
+    for (let i = 0; i < maxBooksDisplayFilter; i++) {
+      const index = (currentIndexFilter + i) % filteredProducts.length;
+      displayProductsFilter.push(filteredProducts[index]);
+    }
+    return displayProductsFilter;
   };
-  // console.log("selectedItemList", selectedItemList);
+
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category);
+    setCurrentIndexFilter(0);
+  };
+
   return (
     <div>
       <div className={styles.bottomrow}>
@@ -153,7 +94,7 @@ const Recomm = () => {
                 <div className={styles.recommend}>
                   Personalised Notes For You
                 </div>
-                {images.length > 4 && (
+                {products.length > 3 && (
                   <div onClick={handleMoreClick} className={styles.btn_more}>
                     <div className={styles.btn_moretxt}>More</div>
                     <FaGreaterThan className={styles.greaterthan_icon} />
@@ -161,34 +102,39 @@ const Recomm = () => {
                 )}
               </div>
               <div className={styles.books_list}>
-                {indices.map(
-                  (index) =>
-                    images[index] && (
+                {getDisplayProducts().map(
+                  (product) =>
+                    product && (
                       <div
-                        key={index}
+                        key={product.keyIndex}
                         className={styles.book}
                         style={{ cursor: "pointer" }}
-                        onClick={() => showDetails(index)}
+                        onClick={() => setSelectedItem(product)}
                       >
                         <img
-                          src={images[index].image}
-                          alt={images[index].name}
+                          src={`http://localhost:3000/uploads/${product.productImage}`}
+                          alt={product.productName}
                           className={styles.book_img}
                         />
                         <div className={styles.book_name}>
-                          {images[index].name}
+                          {product.productName}
                         </div>
                       </div>
                     )
                 )}
               </div>
             </div>
-            {/* <FilterResource /> */}
+            {/* Filtered Products */}
             <div className={styles.category_recomm}>
               <div className={styles.books_head}>
-                <div className={styles.recommend}>Category</div>
-                {displayedImages.length > 5 && (
-                  <div onClick={handleAllClick} className={styles.btn_more}>
+                <div className={styles.recommend}>
+                  Personalized Notes For You
+                </div>
+                {getFilteredProducts().length > 5 && (
+                  <div
+                    onClick={handleMoreClickFilter}
+                    className={styles.btn_more}
+                  >
                     <div className={styles.btn_moretxt}>More</div>
                     <FaGreaterThan className={styles.greaterthan_icon} />
                   </div>
@@ -212,24 +158,22 @@ const Recomm = () => {
                 ))}
               </div>
               <div className={styles.category_list}>
-                {labIndices.map(
-                  (index) =>
-                    displayedImages[index] && (
+                {getDisplayProductsFilter().map(
+                  (product) =>
+                    product && (
                       <div
-                        key={index}
+                        key={product.keyIndex}
                         className={styles.category}
-                        onClick={() => showDetailsAll(index)}
-                        style={{
-                          cursor: "pointer",
-                        }}
+                        onClick={() => setSelectedItem(product)}
+                        style={{ cursor: "pointer" }}
                       >
                         <img
-                          src={displayedImages[index].image}
-                          alt={displayedImages[index].name}
+                          src={`http://localhost:3000/uploads/${product.productImage}`}
+                          alt={product.productName}
                           className={styles.category_img}
                         />
                         <div className={styles.cat_name}>
-                          {displayedImages[index].name}
+                          {product.productName}
                         </div>
                       </div>
                     )

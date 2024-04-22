@@ -10,13 +10,14 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
   },
-  product: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-    },
+  phonenumber: {
+    type: String,
+  },
+  products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  buyedProducts: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "BuyedProduct" },
   ],
+  role: { type: String, enum: ["buyer", "seller"] },
 });
 
-// export default model("User", userSchema);
 module.exports = mongoose.model("User", userSchema);
