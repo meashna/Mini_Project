@@ -125,6 +125,15 @@
     width: 10rem;
     align-items: center;
     justify-content: space-between;
+
+}
+
+.pro_det {
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 98%;
 }
 
 .product_icon {

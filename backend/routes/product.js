@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../models/product.js");
 const User = require("../models/user.js");
+const BuyedProduct = require("../models/buyedProduct.js");
 const multer = require("multer");
 // const upload = multer({ dest: "uploads/" });
 
@@ -92,17 +93,92 @@ router.get("/getAllProducts", async (req, res) => {
   }
 });
 
-router.post("/buyProducts", async (req, res) => {
+// Route to add a product to user's purchased products
+router.post("/purchaseProduct", async (req, res) => {
+  const { userId, productId } = req.body;
+
+  if (!userId || !productId) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
   try {
-    const { productId, userId } = req.body;
-    const product = await Product.findById(productId);
     const user = await User.findById(userId);
-    user.products.push(product._id);
-    await user.save();
-    res.status(200).json({ message: "Product purchased successfully" });
+    const product = await Product.findById(productId);
+
+    if (!user || !product) {
+      return res.status(404).json({ message: "User or Product not found" });
+    }
+
+    const newPurchase = new BuyedProduct({
+      product: productId,
+      user: userId,
+    });
+
+    await newPurchase.save();
+    res.status(201).json({
+      message: "Product purchased successfully",
+      purchase: newPurchase,
+    });
   } catch (error) {
-    console.error("Failed to purchase product:", error);
-    res.status(500).json({ message: "Failed to purchase product" });
+    console.error("Error purchasing product:", error);
+    res.status(500).json({ message: "Error purchasing product" });
+  }
+});
+
+// Route to get all purchased products for a user
+router.get("/userPurchases/:userId", async (req, res) => {
+  try {
+    const purchases = await BuyedProduct.find({ user: req.params.userId })
+      .populate("product")
+      .sort({ purchaseDate: -1 });
+
+    res.status(200).json(purchases);
+  } catch (error) {
+    console.error("Error fetching user purchases:", error);
+    res.status(500).json({ message: "Error fetching user purchases" });
+  }
+});
+
+// Route to delete a purchased product for a user
+router.delete("/userPurchases/:userId/:productId", async (req, res) => {
+  try {
+    // Attempt to find and delete the purchased product that matches the userId and productId
+    const result = await BuyedProduct.findOneAndDelete({
+      _id: req.params.productId,
+      user: req.params.userId,
+    });
+
+    if (!result) {
+      // If no document was found and deleted, send a 404 response
+      return res
+        .status(404)
+        .json({ message: "Product not found or not associated with the user" });
+    }
+
+    // Send a success response if the product was deleted
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting the purchased product:", error);
+    res.status(500).json({ message: "Error deleting the purchased product" });
+  }
+});
+
+router.get("/products/:productId/owner-email", async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const product = await Product.findById(productId).populate("user"); // 'owner' should be the field in Product model that references the User model
+    if (!product) {
+      return res.status(404).send("Product not found");
+    }
+    // res.send({ email: product.user.email });
+    res.status(200).send({
+      email: product.user.email,
+      username: product.user.username,
+      product,
+    });
+  } catch (error) {
+    console.error("Error fetching product owner email:", error);
+    res.status(500).send("Failed to retrieve product owner email");
   }
 });
 
