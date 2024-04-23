@@ -29,22 +29,7 @@ const SideNav = ({ changeView, currentView }) => {
             }
           />
         </div>
-        <div onClick={changeView("orders")}>
-          {/* <IoIosSend
-            className={
-              currentView === "orders"
-                ? styles.active_icon
-                : styles.sidenav_icons
-            }
-          /> */}
-          <AiFillPlusCircle
-            className={
-              currentView === "orders"
-                ? styles.active_icon
-                : styles.sidenav_icons
-            }
-          />
-        </div>
+        {/*  */}
         <div>
           <IoLogOutSharp
             className={styles.sidenav_icons}

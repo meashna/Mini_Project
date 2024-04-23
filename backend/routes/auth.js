@@ -35,21 +35,16 @@ router.post("/signin", async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "User not found." });
     }
-
-    // const isPasswordCorrect = bcrypt.compareSync(
-    //   req.body.password,
-    //   user.password
-    // );
-    // if (!isPasswordCorrect) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "Incorrect password. Please try again." });
-    // }
-
     if (req.body.password !== user.password) {
       return res
         .status(400)
         .json({ message: "Incorrect password. Please try again." });
+    }
+
+    if (req.body.role !== user.role) {
+      return res
+        .status(400)
+        .json({ message: "Incorrect role. Please try again." });
     }
 
     const { password, ...others } = user._doc;
