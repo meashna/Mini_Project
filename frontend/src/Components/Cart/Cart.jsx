@@ -4,7 +4,6 @@ import Swal from "sweetalert";
 import axios from "axios";
 import styles from "./Cart.module.css";
 import emailjs from "emailjs-com";
-// import { getMaxListeners } from "../../../../backend/models/product";
 
 const Cart = () => {
   const [buyedProducts, setBuyedProducts] = useState([]);
@@ -98,8 +97,10 @@ const Cart = () => {
       const productName = product.productName;
       console.log("Product Name", productName);
       console.log("buyermail", buyermail);
+      // const totalperproduct = product.quantity * product.product.productPrice;
+      //console.log("totalperproduct", totalperproduct);
       const templateParams = {
-        from_name: "Your Company or Website Name",
+        from_name: buyermail,
         product_name: productName,
         quantity: 1,
         total_price: total.toFixed(2),
@@ -121,7 +122,15 @@ const Cart = () => {
               response.status,
               response.text
             );
+
+            Swal({
+              title: "Email successfully sent!",
+
+              icon: "success",
+            });
           },
+          //Mail send sucessfully
+
           (error) => {
             console.error("Failed to send the email:", error);
           }
@@ -193,7 +202,7 @@ const Cart = () => {
                       className={styles.btn_rent}
                       onClick={() => fetchOwnerEmail(product.product._id)}
                     >
-                      Rent
+                      Send Mail
                     </button>
                   </div>
                 </div>

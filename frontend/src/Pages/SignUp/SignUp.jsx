@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IoPerson, IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
-// import { RiLock2Fill } from "react-icons/ri";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { CircularProgressbar } from "react-circular-progressbar";
-import Swal from "sweetalert";
 import styles from "./SignUp.module.css";
 import "react-circular-progressbar/dist/styles.css";
+import Swal from "sweetalert";
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -21,17 +20,11 @@ const SignUp = () => {
     password: "",
     role: "",
   });
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  // Navigate hook
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
-
-  // const handlePhoneChange = (e) => {
-  //   const value = e.target.value;
-  //   if (!value.match(/[^0-9 ]/) && value.replace(/\D/g, "").length <= 10) {
-  //     setPhonenumber(value);
-  //   }
-  // };
 
   const handlePhoneChange = (e) => {
     const value = e.target.value;
@@ -39,6 +32,35 @@ const SignUp = () => {
       setPhonenumber(value);
       setInputs((prev) => ({ ...prev, phonenumber: value }));
     }
+  };
+  const handleUsernameChange = (e) => {
+    const value = e.target.value;
+    const name = e.target.name;
+    if (/^\D*$/.test(value)) {
+      // If no digits are found, update the state
+      if (name === "username") {
+        setInputs((prev) => ({ ...prev, username: value }));
+      }
+    }
+  };
+
+  const confirmpswrdChange = (e) => {
+    const value = e.target.value;
+    const name = e.target.name;
+    if (/^\D*$/.test(value)) {
+      // If no digits are found, update the state
+      if (name === "confirmPassword") {
+        setConfirmPassword(value);
+      }
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   const change = (e) => {
@@ -48,14 +70,24 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("This is inputs", Inputs);
+    if (password !== confirmPassword) {
+      Swal({
+        icon: "warning",
+        title: "Passwords do not match.",
+        button: "Try Again",
+      });
+      return;
+    }
+
+    // Include only password in Inputs
+    const inputData = { ...Inputs, password };
+
     // Validation
     if (
-      !Inputs.email.trim() ||
-      !Inputs.password.trim() ||
-      !Inputs.username.trim() ||
-      !Inputs.phonenumber.trim() ||
-      !Inputs.role.trim()
+      !inputData.email.trim() ||
+      !inputData.username.trim() ||
+      !inputData.phonenumber.trim() ||
+      !inputData.role.trim()
     ) {
       Swal({
         icon: "warning",
@@ -71,29 +103,27 @@ const SignUp = () => {
     try {
       const response = await axios.post(
         "http://localhost:3000/api/v1/signup",
-        Inputs
+        inputData
       );
-      console.log("This is response", response.data._id);
-      console.log(response.data._id);
-      sessionStorage.setItem("id", response.data._id);
+
       if (response.data.message === "User added") {
         sessionStorage.setItem("id", response.data._id);
-        localStorage.setItem("username", Inputs.username);
-        localStorage.setItem("usermail", Inputs.email);
-        sessionStorage.setItem("usermail", Inputs.email);
-        // setProgress(100);
-        // setTimeout(() => navigate("/home"), 500);
-        if (Inputs.role === "buyer") {
+        localStorage.setItem("username", inputData.username);
+        localStorage.setItem("usermail", inputData.email);
+        sessionStorage.setItem("usermail", inputData.email);
+
+        if (inputData.role === "buyer") {
           setProgress(100);
           setTimeout(() => {
             navigate("/home");
           }, 2000);
-        } else if (Inputs.role === "seller") {
+        } else if (inputData.role === "seller") {
           setProgress(100);
           setTimeout(() => {
             navigate("/seller");
           }, 2000);
         }
+
         Swal({
           icon: "success",
           title: "Registered Successfully.",
@@ -114,10 +144,6 @@ const SignUp = () => {
         navigate("/signin");
       }
     }
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
   };
 
   // Effects
@@ -166,10 +192,11 @@ const SignUp = () => {
             <input
               type="text"
               name="username"
-              onChange={change}
+              onChange={handleUsernameChange}
               value={Inputs.username}
               placeholder="Enter your name"
-              pattern="[A-Za-z]+"
+              pattern="^[A-Za-z][A-Za-z\s]*$"
+              title="Name must start with a letter and can only contain letters and spaces"
               required
             />
             <div className={styles.icon}>
@@ -184,7 +211,8 @@ const SignUp = () => {
               onChange={change}
               value={Inputs.email}
               required
-              pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
+              pattern="[A-Za-z0-9]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
+              title="Please enter a valid email address  e.g. 0OYk7@example.com"
             />
             <div className={styles.icon}>
               <MdOutlineAlternateEmail />
@@ -204,13 +232,17 @@ const SignUp = () => {
               <FaPhoneAlt />
             </div>
           </div>
+
+          {/* password */}
           <div className={styles.form_control}>
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Enter your password"
-              onChange={change}
-              value={Inputs.password}
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$"
+              title="Password must contain at least 6 characters, including one uppercase letter, one lowercase letter, one digit, and one special character"
               required
             />
             <button
@@ -225,11 +257,44 @@ const SignUp = () => {
               )}
             </button>
           </div>
-          <select name="role" value={Inputs.role} onChange={change} required>
+
+          {/* confirm password */}
+          <div className={styles.form_control}>
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={confirmPassword}
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$"
+              title="Password must contain at least 6 characters, including one uppercase letter, one lowercase letter, one digit, and one special character"
+              required
+            />
+            <button
+              type="button"
+              onClick={toggleConfirmPasswordVisibility}
+              className={styles.toggle_password}
+            >
+              {showConfirmPassword ? (
+                <IoEyeOutline className={styles.viewicon} />
+              ) : (
+                <IoEyeOffOutline className={styles.viewicon} />
+              )}
+            </button>
+          </div>
+
+          <select
+            name="role"
+            value={Inputs.role}
+            onChange={change}
+            required
+            className={styles.select}
+          >
             <option value="">Select Role</option>
-            <option value="seller">I want to offer products for rent. </option>
-            <option value="buyer">I am looking to purchase products.</option>
+            <option value="seller">Seller </option>
+            <option value="buyer">Buyer</option>
           </select>
+
           <button className={styles.login_btn} type="submit">
             Register
           </button>

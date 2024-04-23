@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./Seller.module.css";
 import ProductList from "./ProductList";
-
+import Swal from "sweetalert";
+import { useNavigate } from "react-router-dom";
+import { IoLogOutSharp } from "react-icons/io5";
+// import TopNav from "../../Components/TopNav/TopNav";
 const Seller = () => {
+  const navigate = useNavigate();
   const userId = sessionStorage.getItem("id");
   const username = localStorage.getItem("username") || "Guest";
   const [productList, setProductList] = useState([]);
@@ -95,6 +99,11 @@ const Seller = () => {
         productPrice: 0,
         productImage: "",
       });
+      Swal({
+        title: "Success!",
+        text: "Product added successfully",
+        icon: "success",
+      });
     } catch (error) {
       console.error("Error adding product:", error);
     }
@@ -102,82 +111,100 @@ const Seller = () => {
 
   return (
     <div>
-      <div className={styles.form_seller}>
-        <h1> Hi {username}, Sell Something!!</h1>
-        <form onSubmit={handleSubmit} className={styles.form_items}>
-          <div>
-            {" "}
-            <label className={styles.form_label}>Product Name</label>
-            <input
-              type="text"
-              name="productName"
-              onChange={handleChange}
-              value={inputs.productName}
-              placeholder="Enter your Product Name"
-              required
-              className={styles.form_field}
-            />
-          </div>
-          <div>
-            {" "}
-            <label className={styles.form_label}>Product Description</label>
-            <input
-              type="text"
-              name="productDescription"
-              onChange={handleChange}
-              value={inputs.productDescription}
-              placeholder="Enter your Product Description"
-              pattern="[A-Za-z ]+"
-              required
-              className={styles.form_field}
-            />
-          </div>
-          <div>
-            {" "}
-            <label className={styles.form_label}>Product Category</label>
-            <select
-              name="productCategory"
-              onChange={handleChange}
-              value={inputs.productCategory}
-              required
-              className={styles.form_field}
-            >
-              <option value="Textbook">Textbook</option>
-              <option value="Labmaterials">Labmaterials</option>
-              <option value="Supplymaterials">Supplymaterials</option>
-              <option value="Notebook">Notebook</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div>
-            {" "}
-            <label className={styles.form_label}>Product Price</label>
-            <input
-              type="number"
-              name="productPrice"
-              onChange={handleChange}
-              value={inputs.productPrice}
-              placeholder="Enter your Product Price"
-              min="0"
-              required
-              className={styles.form_field}
-            />
-          </div>
-          <div>
-            {" "}
-            <label className={styles.form_label}>Product Image</label>
-            <input
-              type="file"
-              id="mediaUpload"
-              name="productImage"
-              accept="image/*"
-              onChange={handleChange}
-              className={styles.form_field}
-            />
+      <div className={styles.dashboard}>
+        <div className={styles.main}>
+          <div className={styles.sell_nav}>
+            <h4> Hi {username}, Sell Something!!</h4>
+            <div>
+              <IoLogOutSharp
+                className={styles.logout_icons}
+                onClick={() => navigate("/signin")}
+              />
+            </div>
           </div>
 
-          <button type="submit">Add Product</button>
-        </form>
+          <div className={styles.form_seller}>
+            {/* <h1> Hi {username}, Sell Something!!</h1> */}
+
+            <form onSubmit={handleSubmit} className={styles.form_items}>
+              <div>
+                {" "}
+                <label className={styles.form_label}>Product Name</label>
+                <input
+                  type="text"
+                  name="productName"
+                  onChange={handleChange}
+                  value={inputs.productName}
+                  placeholder="Enter your Product Name"
+                  required
+                  className={styles.form_field}
+                />
+              </div>
+              <div>
+                {" "}
+                <label className={styles.form_label}>Product Description</label>
+                <input
+                  type="text"
+                  name="productDescription"
+                  onChange={handleChange}
+                  value={inputs.productDescription}
+                  placeholder="Enter your Product Description"
+                  pattern="[A-Za-z ]+"
+                  required
+                  className={styles.form_field}
+                />
+              </div>
+              <div>
+                {" "}
+                <label className={styles.form_label}>Product Category</label>
+                <select
+                  name="productCategory"
+                  onChange={handleChange}
+                  value={inputs.productCategory}
+                  required
+                  className={styles.form_field}
+                >
+                  <option value="">Select Category</option>
+                  <option value="Textbook">Textbook</option>
+                  <option value="Labmaterials">Labmaterials</option>
+                  <option value="Supplymaterials">Supplymaterials</option>
+                  <option value="Notebook">Notebook</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div>
+                {" "}
+                <label className={styles.form_label}>Product Price</label>
+                <input
+                  type="number"
+                  name="productPrice"
+                  onChange={handleChange}
+                  value={inputs.productPrice}
+                  placeholder="Enter your Product Price"
+                  min="0"
+                  required
+                  className={styles.form_field}
+                />
+              </div>
+              <div>
+                {" "}
+                <label className={styles.form_label}>Product Image</label>
+                <input
+                  type="file"
+                  id="mediaUpload"
+                  name="productImage"
+                  accept="image/*"
+                  onChange={handleChange}
+                  className={styles.form_field}
+                />
+              </div>
+
+              <button type="submit" className={styles.login_btn}>
+                Add Product
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
       <div className={styles.mainpro_div}>
         {productList.map((item, index) => (
@@ -194,5 +221,4 @@ const Seller = () => {
     </div>
   );
 };
-
 export default Seller;
